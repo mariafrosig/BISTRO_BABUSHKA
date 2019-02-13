@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <style>
+        #popup {
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: #eacb92;
+
+        }
+
+
+        #indhold {
+            width: 80vw;
+            height: 70vh;
+            margin: auto;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        #luk {
+            text-align: right;
+            box-sizing: border-box;
+            padding: 2em;
+        }
+
+        #luk button {
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            border-radius: 10px;
+            width: 8vw;
+            height: 4vw;
+            font-size: 16px;
+            margin: 4px 2px;
+            background-color: #eaeaea;
+        }
+
+        .vis {
+            background-color: #5f455c;
+            border-radius: 10px;
+            width: 80%;
+            height: 80%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 1vw;
+            margin: 1.5vw auto;
+        }
+
+        .center {
+            text-align: center;
+            font-size: 200%;
+        }
+
+
+        .vis img {
+            width: 80%;
+        }
+
+        a {
+            color: black;
+        }
+
+        h1,
+        h2,
+        p {
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="singleview">
+        <div id="luk"><button>Tilbage</button></div>
+        <div id="indhold"></div>
+    </div>
+
+
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("id");
+        let ret;
+        let retter;
+
+
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+
+            async function getJson() {
+
+
+                let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
+                retter = await jsonData.json();
+
+                retter.forEach(obj => {
+                    if (obj.id == id) {
+                        ret = obj;
+                    }
+                })
+
+                console.log(id);
+                åbn();
+
+            }
+
+            function åbn() {
+                console.log("vis ret");
+
+                document.querySelector("#indhold").innerHTML = `<div class="vis">
+                            <div>
+                            </div>
+                            <div>
+                            <h2>${ret.navn}</h2>
+                            <p> ${ret.lang}</p>
+                            <p> <b> ${ret.pris} kr.</b></p>
+                            </div>
+                            </div>`
+
+
+            }
+
+            document.querySelector("#luk button").addEventListener("click", () => {
+                console.log("luk");
+                location.href = "babushka-ny-side-main.html"
+            })
+
+            getJson();
+
+        }
+
+    </script>
+</body>
+
+</html>

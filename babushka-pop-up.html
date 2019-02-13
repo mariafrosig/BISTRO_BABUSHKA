@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <style>
+        /*         <img src='imgs/small " + ${retter.billede} +  ".jpg'>*/
+
+
+        body {
+            font-family: sans-serif;
+            background-color: #dbdbdb;
+        }
+
+        #menu_div {
+            display: grid;
+            grid-template-columns: auto auto;
+            margin: 0 auto;
+        }
+
+        .vis {
+            background-color: #7f9ba5;
+            border-radius: 10px;
+            width: 80%;
+            height: 80%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 1vw;
+            margin: 1.5vw auto;
+        }
+
+        .center {
+            text-align: center;
+            font-size: 200%;
+        }
+
+
+        .vis img {
+            width: 80%;
+        }
+
+        a {
+            color: black;
+        }
+
+        .menu {
+            text-align: center;
+        }
+
+        .valgt {
+            background-color: black;
+            color: white;
+        }
+
+        #popup {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            display: none;
+
+        }
+
+        #indhold {
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.75);
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        #luk {
+            text-align: right;
+            box-sizing: border-box;
+            padding: 2em;
+        }
+
+        #luk button {
+            cursor: pointer;
+        }
+    </style>
+
+
+
+
+
+
+</head>
+
+<body>
+    <div id="popup">
+        <div id="luk"><button>X</button></div>
+        <div id="indhold"></div>
+    </div>
+
+    <header>
+        <div class="center">
+            <h1>Bistro Babushka</h1>
+        </div>
+    </header>
+
+
+    <nav>
+        <div class="menu">
+            <button class="filter valgt" data-hold="alle">Alle</button>
+            <button class="filter" data-hold="forretter">Forret</button>
+            <button class="filter" data-hold="hovedretter">Hovedret</button>
+            <button class="filter" data-hold="desserter">Dessert</button>
+            <button class="filter" data-hold="drikkevarer">Drikkevarer</button>
+            <button class="filter" data-hold="sideorders">Sideorders</button>
+        </div>
+
+    </nav>
+
+    <main>
+
+
+        <div id="menu_div">
+
+        </div>
+
+    </main>
+
+
+    <script>
+        let retter = [];
+        let filter = "alle";
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            let dest = document.querySelector("#menu_div");
+
+            async function getJson() {
+                let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
+                retter = await jsonData.json();
+                retter.sort((a, b) => {});
+                visRet();
+            }
+
+            function visRet() {
+                dest.innerHTML = "";
+                retter.forEach(retter => {
+                    if (filter == "alle" || filter == retter.kategori) {
+
+
+                        let template =
+                            `<div class="vis">
+                            <div>
+
+                            </div>
+                            <div>
+                            <h2>${retter.navn}</h2>
+                            <p>${retter.kort}</p>
+                            <p> <b> ${retter.pris} kr.</b></p>
+                            </div>
+                            </div>`;
+
+
+
+                        dest.insertAdjacentHTML("beforeend", template);
+                        dest.lastElementChild.addEventListener("click", åbn);
+
+                        function åbn() {
+                            document.querySelector("#indhold").innerHTML = `<div class="vis">
+                            <div>
+                            </div>
+                            <div>
+                            <h2>${retter.navn}</h2>
+                            <p> ${retter.lang}</p>
+                            <p> <b> ${retter.pris} kr.</b></p>
+                            </div>
+                            </div>`
+
+                            document.querySelector("#popup").style.display = "block";
+
+                        }
+
+                    }
+                })
+
+
+                document.querySelector("#luk button").addEventListener("click", () => {
+                    document.querySelector("#popup").style.display = "none";
+                })
+
+            }
+
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtering);
+            })
+
+
+
+
+            function filtering() {
+                console.log("filtrering");
+                filter = this.getAttribute("data-hold");
+                document.querySelectorAll(".filter").forEach(elm => {
+                    elm.classList.remove("valgt");
+                })
+                this.classList.add("valgt");
+                visRet();
+            }
+            getJson();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <style>
+        /*         <img src='imgs/small " + ${retter.billede} +  ".jpg'>*/
+
+
+        body {
+            font-family: sans-serif;
+            background-color: #eacb92;
+
+        }
+
+        #menu_div {
+            display: grid;
+            grid-template-columns: auto auto;
+            margin: 0 auto;
+        }
+
+        .vis {
+            background-color: #5f455c;
+            border-radius: 10px;
+            width: 80%;
+            height: 80%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 1vw;
+            margin: 1.5vw auto;
+        }
+
+        .center {
+            text-align: center;
+            font-size: 200%;
+        }
+
+
+        .vis img {
+            width: 80%;
+        }
+
+        a {
+            color: black;
+        }
+
+        .menu {
+            text-align: center;
+        }
+
+        h1,
+        h2,
+        p {
+            color: white;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            border-radius: 10px;
+            width: 8vw;
+            height: 4vw;
+            font-size: 16px;
+            margin: 4px 2px;
+            background-color: #eaeaea;
+        }
+
+        .valgt {
+            background-color: black;
+            color: white;
+        }
+    </style>
+
+
+
+
+
+
+</head>
+
+<body>
+
+    <header>
+        <div class="center">
+            <h1>Bistro Babushka</h1>
+        </div>
+    </header>
+
+
+    <nav>
+        <div class="menu">
+            <button class="filter valgt" data-hold="alle">Alle</button>
+            <button class="filter" data-hold="forretter">Forret</button>
+            <button class="filter" data-hold="hovedretter">Hovedret</button>
+            <button class="filter" data-hold="desserter">Dessert</button>
+            <button class="filter" data-hold="drikkevarer">Drikkevarer</button>
+            <button class="filter" data-hold="sideorders">Sideorders</button>
+        </div>
+
+    </nav>
+
+    <main>
+
+
+        <div id="menu_div">
+
+        </div>
+
+    </main>
+
+
+    <script>
+        let retter = [];
+        let filter = "alle";
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            let dest = document.querySelector("#menu_div");
+
+            async function getJson() {
+                let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
+                retter = await jsonData.json();
+                retter.sort((a, b) => {});
+                visRet();
+            }
+
+            function visRet() {
+                dest.innerHTML = "";
+                retter.forEach(retter => {
+                    if (filter == "alle" || filter == retter.kategori) {
+
+
+                        let template =
+                            `<div class="vis">
+                            <div>
+
+                            </div>
+                            <div>
+                            <h2>${retter.navn}</h2>
+                            <p>${retter.kort}</p>
+                            <p> <b> ${retter.pris} kr.</b></p>
+                            </div>
+                            </div>`;
+
+
+
+                        dest.insertAdjacentHTML("beforeend", template);
+                        dest.lastElementChild.addEventListener("click", () => {
+                            location.href = "babushka-ny-side.html?id=" + retter.id;
+                        });
+                    }
+
+                })
+            }
+
+
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtering);
+            })
+
+
+
+
+            function filtering() {
+                console.log("filtrering");
+                filter = this.getAttribute("data-hold");
+                document.querySelectorAll(".filter").forEach(elm => {
+                    elm.classList.remove("valgt");
+                })
+                this.classList.add("valgt");
+                visRet();
+            }
+            getJson();
+        }
+    </script>
+</body>
+
+</html>
