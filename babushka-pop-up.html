@@ -9,10 +9,10 @@
     <style>
         /*         <img src='imgs/small " + ${retter.billede} +  ".jpg'>*/
 
-
         body {
             font-family: sans-serif;
-            background-color: #dbdbdb;
+            background-color: #eacb92;
+
         }
 
         #menu_div {
@@ -51,6 +51,24 @@
             text-align: center;
         }
 
+        h1,
+        h2,
+        p {
+            color: white;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            border-radius: 10px;
+            width: 8vw;
+            height: 4vw;
+            font-size: 16px;
+            margin: 4px 2px;
+            background-color: #eaeaea;
+        }
+
         .valgt {
             background-color: black;
             color: white;
@@ -62,13 +80,14 @@
             position: fixed;
             top: 0;
             display: none;
+            background-color: rgba(255, 255, 255, 0.75);
+
 
         }
 
         #indhold {
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(255, 255, 255, 0.75);
+            width: 80vw;
+            height: 80vh;
             margin: auto;
             box-sizing: border-box;
         }
@@ -81,6 +100,7 @@
 
         #luk button {
             cursor: pointer;
+            font-size: 3vw;
         }
     </style>
 
@@ -94,7 +114,8 @@
 <body>
     <div id="popup">
         <div id="luk"><button>X</button></div>
-        <div id="indhold"></div>
+        <div id="indhold">
+        </div>
     </div>
 
     <header>
@@ -149,8 +170,9 @@
 
                         let template =
                             `<div class="vis">
-                            <div>
 
+                            <div>
+<img src="imgs/large/${retter.billede}.jpg">
                             </div>
                             <div>
                             <h2>${retter.navn}</h2>
@@ -167,6 +189,7 @@
                         function åbn() {
                             document.querySelector("#indhold").innerHTML = `<div class="vis">
                             <div>
+<img src="imgs/large/${retter.billede}.jpg">
                             </div>
                             <div>
                             <h2>${retter.navn}</h2>
